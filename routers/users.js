@@ -1,11 +1,12 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 const { User } = require('../models/user');
+const { handleRegister } = require('../controllers/registerController');
+const { handleLogin } = require('../controllers/loginController');
+const { handleLogout } = require('../controllers/logoutController');
 
 router.get('/', async (req, res) => {
-	const users = await User.find().select('-passwordHash');
+	const users = await User.find().select('-password');
 
 	if (!users) {
 		res.status(500).send('Error fetching users');
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
 
 // Get single user
 router.get('/:id', async (req, res) => {
-	const users = await User.findById(req.params.id).select('-passwordHash');
+	const users = await User.findById(req.params.id).select('-password');
 
 	if (!users) {
 		res.status(500).send('Error fetching users');
@@ -26,47 +27,10 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new user
-router.post('/register', async (req, res) => {
-	const user = new User({
-		name: req.body.name,
-		passwordHash: bcrypt.hashSync(req.body.passwordHash, 10),
-		isAdmin: req.body.isAdmin,
-	});
-
-	try {
-		await user.save();
-		res.send(user);
-	} catch (err) {
-		res.status(400).send(err);
-	}
-});
-
+router.post('/register', handleRegister);
 // Login user
-router.post('/login', async (req, res) => {
-	const user = await User.findOne({ name: req.body.name });
-
-	if (!user) {
-		return res.status(400).send('Invalid username or password');
-	}
-
-	const validPassword = bcrypt.compareSync(
-		req.body.passwordHash,
-		user.passwordHash
-	);
-
-	if (!validPassword) {
-		res.status(400).send('Invalid username or password');
-	}
-
-	const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
-		expiresIn: '1d',
-	});
-
-	res.send({
-		_id: user._id,
-		username: user.name,
-		token,
-	});
-});
+router.post('/login', handleLogin);
+// Logout user
+router.post('/logout', handleLogout);
 
 module.exports = router;

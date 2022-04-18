@@ -1,16 +1,4 @@
-const expressJwt = require('express-jwt');
 const jwt = require('jsonwebtoken');
-
-// function authJwt(req, res, next) {
-// 	const secret = process.env.TOKEN_SECRET;
-
-// 	return expressJwt({
-// 		secret,
-// 		algorithms: ['HS256'],
-// 	}).unless({
-// 		path: ['api/v1/users/login', 'api/v1/users/register'],
-// 	});
-// }
 
 function authJwt(req, res, next) {
 	const authHeader = req.headers.authorization || req.headers.Authorization;

@@ -5,13 +5,13 @@ const cors = require('cors');
 const app = express();
 const productsRouter = require('./routers/products');
 const userRouter = require('./routers/users');
-const authJwt = require('./utils/jwt');
 const connectDB = require('./utils/dbConnect');
 const corsOptions = require('./utils/corsOptions');
 
 const api = process.env.API_URL;
 
 const { Server } = require('socket.io');
+const jwt = require('express-jwt');
 const socketio = new Server(process.env.SOCKET_PORT, {
 	cors: {
 		origin: 'http://localhost:3000',
@@ -48,10 +48,17 @@ app.use(cors(corsOptions));
 
 // Middlewares
 app.use(express.json());
+app.use(
+	jwt({
+		secret: process.env.TOKEN_SECRET,
+		algorithms: ['HS256'],
+	}).unless({
+		path: [`${api}/users/register`, `${api}/users/login`],
+	})
+);
 
 // Routes
 app.use(`${api}/users`, userRouter);
-app.use(authJwt);
 app.use(`${api}/products`, productsRouter);
 
 connectDB();
