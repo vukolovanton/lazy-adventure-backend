@@ -3,66 +3,62 @@ const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const http = require('http').Server(app);
-const api = process.env.API_URL;
 const productsRouter = require('./routers/products');
 const userRouter = require('./routers/users');
 const authJwt = require('./utils/jwt');
+const connectDB = require('./utils/dbConnect');
+const corsOptions = require('./utils/corsOptions');
+
+const api = process.env.API_URL;
 
 const { Server } = require('socket.io');
-const socketio = new Server(3002, {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST'],
-  }
+const socketio = new Server(process.env.SOCKET_PORT, {
+	cors: {
+		origin: 'http://localhost:3000',
+		methods: ['GET', 'POST'],
+	},
 });
 
 const position = {
-  x: 200,
-  y: 200,
+	x: 200,
+	y: 200,
 };
 
 socketio.on('connection', (socket) => {
-  socket.emit('position', position);
+	socket.emit('position', position);
 
-  socket.on('move', (data) => {
-    switch (data) {
-      case 'left':
-        position.x -= 5;
-        socketio.emit('position', position);
-        break;
+	socket.on('move', (data) => {
+		switch (data) {
+			case 'left':
+				position.x -= 5;
+				socketio.emit('position', position);
+				break;
 
-      case 'right':
-        position.y += 5;
-        socketio.emit('position', position);
-        break;
-    }
-  });
+			case 'right':
+				position.y += 5;
+				socketio.emit('position', position);
+				break;
+		}
+	});
 });
 
-app.use(cors());
-app.options('*', cors());
+// CORS
+app.use(cors(corsOptions));
+// app.options('*', cors());
 
+// Middlewares
 app.use(express.json());
-// app.use(authJwt());
-app.use(`${api}/products`, productsRouter);
+
+// Routes
 app.use(`${api}/users`, userRouter);
+app.use(authJwt);
+app.use(`${api}/products`, productsRouter);
 
-// app.use((err, req, res, next) => {
-// 	if (err.name === 'UnauthorizedError') {
-// 		res.status(401).send('Invalid token');
-// 	}
-// });
+connectDB();
 
-mongoose
-  .connect(process.env.CONNECTION_STRING)
-  .then(() => {
-    console.log('success');
-  })
-  .catch(() => {
-    console.log('error');
-  });
-
-http.listen(3001, () => {
-  console.log(api);
+mongoose.connection.once('open', () => {
+	console.log('Connected to MongoDB');
+	app.listen(process.env.EXPRESS_PORT, () =>
+		console.log(`Server running on port ${process.env.EXPRESS_PORT}`)
+	);
 });
