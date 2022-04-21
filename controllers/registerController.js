@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { User } = require('../models/user');
 
@@ -15,11 +16,21 @@ async function handleRegister(req, res) {
 
 	try {
 		const duplicate = await User.findOne({ username: user.username }).exec();
-		if (duplicate)
+		if (duplicate) {
 			return res.status(409).json({ message: 'Username already exists.' });
+		}
 
 		await user.save();
-		res.send(user);
+
+		const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
+			expiresIn: '1d',
+		});
+
+		res.send({
+			id: user._id,
+			user,
+			token,
+		});
 	} catch (err) {
 		res.status(400).send(err);
 	}

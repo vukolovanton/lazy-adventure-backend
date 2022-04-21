@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const productsRouter = require('./routers/products');
+const playerRouter = require('./routers/player');
 const userRouter = require('./routers/users');
 const connectDB = require('./utils/dbConnect');
 const corsOptions = require('./utils/corsOptions');
@@ -60,6 +61,7 @@ app.use(
 // Routes
 app.use(`${api}/users`, userRouter);
 app.use(`${api}/products`, productsRouter);
+app.use(`${api}/player`, playerRouter);
 
 connectDB();
 

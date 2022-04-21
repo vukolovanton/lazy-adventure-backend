@@ -22,8 +22,10 @@ async function handleLogin(req, res) {
 	res.cookie('token', token, { httpOnly: true });
 
 	res.send({
-		_id: user._id,
-		username: user.username,
+		id: user._id,
+		user: {
+			username: user.username,
+		},
 		token,
 	});
 }
