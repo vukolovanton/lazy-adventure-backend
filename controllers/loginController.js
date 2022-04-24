@@ -16,14 +16,14 @@ async function handleLogin(req, res) {
 	}
 
 	const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
-		expiresIn: '1d',
+		expiresIn: '7d',
 	});
 
 	res.cookie('token', token, { httpOnly: true });
 
 	res.send({
-		id: user._id,
 		user: {
+			id: user._id,
 			username: user.username,
 		},
 		token,

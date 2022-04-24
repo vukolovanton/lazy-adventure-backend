@@ -28,8 +28,8 @@ const position = {
 };
 
 io.on('connection', (socket) => {
-	socket.on('joinRoom', ({ username, room }) => {
-		const user = userJoin(socket.id, username, room);
+	socket.on('joinRoom', ({ username, room, details }) => {
+		const user = userJoin(socket.id, username, room, details);
 
 		socket.join(user.room);
 
@@ -51,22 +51,9 @@ io.on('connection', (socket) => {
 	socket.on('drop', (data) => {
 		position.x = data.x;
 		position.y = data.y;
+		// position.userId = data.userId;
 
 		io.emit('position', position);
-	});
-
-	socket.on('move', (data) => {
-		switch (data) {
-			case 'left':
-				position.x -= 5;
-				io.emit('position', position);
-				break;
-
-			case 'right':
-				position.y += 5;
-				io.emit('position', position);
-				break;
-		}
 	});
 
 	socket.on('disconnect', () => {
