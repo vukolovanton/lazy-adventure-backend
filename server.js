@@ -31,10 +31,16 @@ io.on('connection', (socket) => {
 	socket.on('joinRoom', ({ username, room, details }) => {
 		const user = userJoin(socket.id, username, room, details);
 
+		position[details.userId] = {
+			x: 100,
+			y: 100,
+		};
+
 		socket.join(user.room);
 
 		// Broadcast when a user connects
 		io.to(user.room).emit('joined', {
+			roomUserId: user.id,
 			message: `${user.username} has joined`,
 			data: getRoomUsers(user.room),
 		});
@@ -44,14 +50,16 @@ io.on('connection', (socket) => {
 			room: user.room,
 			users: getRoomUsers(user.room),
 		});
-	});
 
-	socket.emit('position', position);
+		io.emit('position', position);
+	});
 
 	socket.on('drop', (data) => {
 		position.x = data.x;
 		position.y = data.y;
-		// position.userId = data.userId;
+
+		position[data.userId].x = data.x;
+		position[data.userId].y = data.y;
 
 		io.emit('position', position);
 	});
