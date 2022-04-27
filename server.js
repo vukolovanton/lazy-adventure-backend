@@ -13,6 +13,8 @@ const { userJoin, getRoomUsers, userLeave } = require('./utils/users');
 const multer = require('multer');
 const bodyParser = require('body-parser');
 
+global.__basedir = __dirname;
+
 let storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, __dirname + '/resources/static/uploads');
@@ -116,16 +118,18 @@ app.use(
 app.use(`${api}/users`, userRouter);
 app.use(`${api}/products`, productsRouter);
 app.use(`${api}/player`, playerRouter);
+app.use(`${api}/files`, require('./routers/upload'));
+app.use(express.static('resources'));
 
-app.post(`${api}/upload`, (req, res) => {
-	upload(req, res, (err) => {
-		if (err) {
-			res.status(400).send('Something went wrong!');
-			console.log(err);
-		}
-		res.send(req.file);
-	});
-});
+// app.post(`${api}/upload`, (req, res) => {
+// 	upload(req, res, (err) => {
+// 		if (err) {
+// 			res.status(400).send('Something went wrong!');
+// 			console.log(err);
+// 		}
+// 		res.send(req.file);
+// 	});
+// });
 
 connectDB();
 
