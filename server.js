@@ -10,10 +10,25 @@ const userRouter = require('./routers/users');
 const connectDB = require('./utils/dbConnect');
 const corsOptions = require('./utils/corsOptions');
 const { userJoin, getRoomUsers, userLeave } = require('./utils/users');
+const multer = require('multer');
+const bodyParser = require('body-parser');
+
+let storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, __dirname + '/resources/static/uploads');
+	},
+	filename: function (req, file, cb) {
+		cb(null, `${file.fieldname}-${Date.now()}.png`);
+	},
+});
+
+const upload = multer({ storage }).single('file');
 
 const app = express();
 const httpServer = require('http').createServer(app);
 const api = process.env.API_URL;
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const io = new Server(httpServer, {
 	cors: {
@@ -101,6 +116,16 @@ app.use(
 app.use(`${api}/users`, userRouter);
 app.use(`${api}/products`, productsRouter);
 app.use(`${api}/player`, playerRouter);
+
+app.post(`${api}/upload`, (req, res) => {
+	upload(req, res, (err) => {
+		if (err) {
+			res.status(400).send('Something went wrong!');
+			console.log(err);
+		}
+		res.send(req.file);
+	});
+});
 
 connectDB();
 
