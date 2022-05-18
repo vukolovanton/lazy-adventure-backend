@@ -6,7 +6,10 @@ let storage = multer.diskStorage({
     cb(null, __basedir + '/public');
   },
   filename: function(req, file, cb) {
-    cb(null, `${file.fieldname}-${Date.now()}.png`);
+    const filename = req.headers['x-file-name'];
+    console.log(filename);
+    console.log(file)
+    cb(null, `${file.originalname}-${Date.now()}.png`);
   },
 });
 
