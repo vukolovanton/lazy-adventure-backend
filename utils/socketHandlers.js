@@ -1,3 +1,4 @@
+const { vary } = require('express/lib/response');
 const { userJoin, getRoomUsers, userLeave } = require('../utils/users');
 
 const position = {
@@ -63,7 +64,13 @@ function handleSockets(socket, io) {
     io.emit('newSrc', {
       src
     })
-  })
+  });
+
+  socket.on('roll', (value) => {
+    io.emit('diceRolled', value);
+  });
+
+
 }
 
 module.exports = handleSockets;
