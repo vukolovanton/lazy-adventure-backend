@@ -1,5 +1,5 @@
 const { vary } = require('express/lib/response');
-const { userJoin, getRoomUsers, userLeave } = require('../utils/users');
+const { userJoin, getRoomUsers, userLeave, removeMonster } = require('../utils/users');
 
 const position = {
   x: 200,
@@ -42,6 +42,25 @@ function handleSockets(socket, io) {
 
     io.emit('position', position);
   });
+
+  socket.on('removeMonster', (details) => {
+    const user = removeMonster(socket.id, details);
+
+    if (user) {
+      io.to(user.room).emit('left', {
+        message: `${user.username} has left`,
+        data: getRoomUsers(user.room),
+      });
+
+      // Send users and room info
+      io.to(user.room).emit('roomUsers', {
+        room: user.room,
+        users: getRoomUsers(user.room),
+      });
+    }
+  });
+
+
 
   socket.on('disconnect', () => {
     const user = userLeave(socket.id);
