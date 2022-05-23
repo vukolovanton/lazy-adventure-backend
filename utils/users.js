@@ -30,6 +30,14 @@ function removeMonster(id, details) {
   }
 }
 
+function updateMonsterHitPoints(id, details) {
+  const index = users.findIndex((user) => user.details.userId === details.userId);
+  if (index !== -1) {
+    users[index].details.stats.currentHitPoints = details.currentHitPoints;
+  }
+}
+
+
 // Get room users
 function getRoomUsers(room) {
   return users.filter((user) => user.room === room);
@@ -41,4 +49,5 @@ module.exports = {
   userLeave,
   getRoomUsers,
   removeMonster,
+  updateMonsterHitPoints,
 };

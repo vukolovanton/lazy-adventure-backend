@@ -1,5 +1,5 @@
 const { vary } = require('express/lib/response');
-const { userJoin, getRoomUsers, userLeave, removeMonster } = require('../utils/users');
+const { userJoin, getRoomUsers, userLeave, removeMonster, updateMonsterHitPoints } = require('../utils/users');
 
 const position = {
   x: 200,
@@ -60,7 +60,12 @@ function handleSockets(socket, io) {
     }
   });
 
-
+  socket.on('updateMonsterHitPoints', (details) => {
+    updateMonsterHitPoints(socket.id, details);
+    io.emit('updateMonsterHealth', {
+      details,
+    })
+  });
 
   socket.on('disconnect', () => {
     const user = userLeave(socket.id);
