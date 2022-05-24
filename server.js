@@ -11,6 +11,7 @@ const connectDB = require('./utils/dbConnect');
 const corsOptions = require('./utils/corsOptions');
 const bodyParser = require('body-parser');
 const handleSockets = require('./utils/socketHandlers');
+const { error } = require('console');
 
 global.__basedir = __dirname;
 
@@ -23,26 +24,26 @@ app.use(cors(corsOptions));
 
 //=== Socket
 const io = new Server(httpServer, {
-	cors: {
-		origin: ['http://localhost:3000', 'http://192.168.31.135:3000'],
-		methods: ['GET', 'POST'],
-	},
+  cors: {
+    origin: ['http://localhost:3000', 'http://192.168.31.135:3000'],
+    methods: ['GET', 'POST'],
+  },
 });
 
 io.on('connection', (socket) => {
-	handleSockets(socket, io);
+  handleSockets(socket, io);
 });
 //===
 
 //=== Middlewares
 app.use(express.json());
 app.use(
-	jwt({
-		secret: process.env.TOKEN_SECRET,
-		algorithms: ['HS256'],
-	}).unless({
-		path: [`${api}/users/register`, `${api}/users/login`, /\/public*/],
-	})
+  jwt({
+    secret: process.env.TOKEN_SECRET,
+    algorithms: ['HS256'],
+  }).unless({
+    path: [`${api}/users/register`, `${api}/users/login`, /\/public*/],
+  })
 );
 //===
 
@@ -51,16 +52,17 @@ app.use(`${api}/users`, userRouter);
 app.use(`${api}/products`, productsRouter);
 app.use(`${api}/player`, playerRouter);
 app.use(`${api}/files`, require('./routers/upload'));
-app.use('/public', express.static('public'));
+app.use('/public/maps/', express.static('public/maps/'));
+app.use('/public/monsters', express.static('public/monsters'));
 //===
 
 connectDB();
 
 mongoose.connection.once('open', () => {
-	console.log('Connected to MongoDB');
-	app.listen(process.env.EXPRESS_PORT, () =>
-		console.log(`Server running on port ${process.env.EXPRESS_PORT}`)
-	);
+  console.log('Connected to MongoDB');
+  app.listen(process.env.EXPRESS_PORT, () =>
+    console.log(`Server running on port ${process.env.EXPRESS_PORT}`)
+  );
 });
 
 httpServer.listen(process.env.SOCKET_PORT);
