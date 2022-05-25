@@ -7,8 +7,6 @@ let storage = multer.diskStorage({
   },
   filename: function(req, file, cb) {
     const filename = req.headers['x-file-name'];
-    console.log(filename);
-    console.log(file)
     cb(null, `${file.originalname}-${Date.now()}.png`);
   },
 });
