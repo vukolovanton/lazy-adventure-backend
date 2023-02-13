@@ -1,8 +1,8 @@
 {
   "name": "abstracat",
-  "userId": 1676308572037,
+  "userId": 1676308889160,
   "gender": "f",
-  "characterClass": "Druid",
+  "characterClass": "Ranger",
   "level": 4,
   "background": "none",
   "race": "human",
@@ -23,7 +23,7 @@
   "hitPoints": {
     "characterId": 57,
     "hitPointMaximum": 20,
-    "currentHitPoints": 19,
+    "currentHitPoints": 22,
     "temporaryHitPoints": 0,
     "hitDice": "1d7"
   },
