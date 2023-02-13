@@ -1,14 +1,8 @@
 require('dotenv/config');
 const { Server } = require('socket.io');
-const mongoose = require('mongoose');
 const express = require('express');
-const jwt = require('express-jwt');
 const cors = require('cors');
-const productsRouter = require('./routers/products');
-const playerRouter = require('./routers/player');
 const characterRouter = require('./routers/character');
-const userRouter = require('./routers/users');
-const connectDB = require('./utils/dbConnect');
 const corsOptions = require('./utils/corsOptions');
 const bodyParser = require('body-parser');
 const handleSockets = require('./utils/socketHandlers');
@@ -41,9 +35,6 @@ app.use(express.json());
 //===
 
 //=== Routes
-app.use(`${api}/users`, userRouter);
-app.use(`${api}/products`, productsRouter);
-app.use(`${api}/player`, playerRouter);
 app.use(`${api}/character`, characterRouter);
 app.use(`${api}/files`, require('./routers/upload'));
 app.use('/public/maps/', express.static('public/maps/'));

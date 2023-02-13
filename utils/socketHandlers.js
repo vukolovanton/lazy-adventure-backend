@@ -9,7 +9,6 @@ const position = {
 function handleSockets(socket, io) {
   socket.on('joinRoom', ({ username, room, details }) => {
     const user = userJoin(socket.id, username, room, details);
-    console.log(user, 'user')
 
     position[details.userId] = {
       x: 100,
