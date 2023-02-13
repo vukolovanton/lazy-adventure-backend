@@ -6,6 +6,7 @@ const jwt = require('express-jwt');
 const cors = require('cors');
 const productsRouter = require('./routers/products');
 const playerRouter = require('./routers/player');
+const characterRouter = require('./routers/character');
 const userRouter = require('./routers/users');
 const connectDB = require('./utils/dbConnect');
 const corsOptions = require('./utils/corsOptions');
@@ -37,32 +38,20 @@ io.on('connection', (socket) => {
 
 //=== Middlewares
 app.use(express.json());
-app.use(
-  jwt({
-    secret: process.env.TOKEN_SECRET,
-    algorithms: ['HS256'],
-  }).unless({
-    path: [`${api}/users/register`, `${api}/users/login`, /\/public*/],
-  })
-);
 //===
 
 //=== Routes
 app.use(`${api}/users`, userRouter);
 app.use(`${api}/products`, productsRouter);
 app.use(`${api}/player`, playerRouter);
+app.use(`${api}/character`, characterRouter);
 app.use(`${api}/files`, require('./routers/upload'));
 app.use('/public/maps/', express.static('public/maps/'));
 app.use('/public/monsters', express.static('public/monsters'));
 //===
 
-connectDB();
-
-mongoose.connection.once('open', () => {
-  console.log('Connected to MongoDB');
-  app.listen(process.env.EXPRESS_PORT, () =>
-    console.log(`Server running on port ${process.env.EXPRESS_PORT}`)
-  );
-});
+app.listen(process.env.EXPRESS_PORT, () =>
+  console.log(`Server running on port ${process.env.EXPRESS_PORT}`)
+);
 
 httpServer.listen(process.env.SOCKET_PORT);

@@ -1,4 +1,6 @@
 const { Player } = require('../models/player');
+const fs = require("fs")
+const { writeFile } = require("fs");
 
 async function handleGetPlayersSheet(req, res) {
 	if (!req.params.userId) {
@@ -76,8 +78,20 @@ async function handleCreateOrUpdatePlayerSheet(req, res) {
 	});
 }
 
+async function handleCreateCharacter(req, res) {
+  writeFile(path, JSON.stringify(req.body, null, 2), (error) => {
+    if (error) {
+        console.log("An error has occurred ", error);
+        return res.status(500).json({ message: error });
+    }
+    console.log("Data written successfully to the file");
+	  return res.status(200).json({});
+	});
+}
+
 module.exports = {
 	handleSavePlayerSheet,
 	handleGetPlayersSheet,
 	handleCreateOrUpdatePlayerSheet,
+  handleCreateCharacter,
 };

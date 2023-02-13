@@ -1,0 +1,137 @@
+{
+  "characterId": 57,
+  "userId": 3,
+  "name": "abstracat",
+  "characterClass": "updated",
+  "level": 4,
+  "background": "none",
+  "race": "human",
+  "alignment": "haotic",
+  "exp": 200,
+  "baseStats": {
+    "characterId": 57,
+    "strength": 1000,
+    "dexterity": 12,
+    "constitution": 14,
+    "intelligence": 8,
+    "wisdom": 122,
+    "charisma": 14,
+    "proficiencyBonus": 0,
+    "armorClass": 14,
+    "initiative": 1,
+    "speed": 30
+  },
+  "hitPoints": {
+    "characterId": 57,
+    "hitPointMaximum": 20,
+    "currentHitPoints": 18,
+    "temporaryHitPoints": 0,
+    "hitDice": "1d7"
+  },
+  "skills": {
+    "acrobatics": 3,
+    "animalHandling": 4,
+    "arcana": 5,
+    "athletics": 12,
+    "deception": 6,
+    "history": 1,
+    "insight": 31,
+    "intimidation": 7,
+    "investigation": 12,
+    "medicine": 17,
+    "nature": 2,
+    "perception": 18,
+    "performance": 6,
+    "persuasion": 7,
+    "religion": 4,
+    "sleightOfHand": 4,
+    "stealth": 22,
+    "survival": 5
+  },
+  "savingThrows": {
+    "strength": 3,
+    "dexterity": 2,
+    "constitution": 1,
+    "intelligence": 5,
+    "wisdom": 6,
+    "charisma": 4
+  },
+  "proficiency": {
+    "acrobatics": true,
+    "animalHandling": true,
+    "arcana": true,
+    "athletics": false,
+    "deception": false,
+    "history": false,
+    "insight": false,
+    "intimidation": true,
+    "investigation": true,
+    "medicine": true,
+    "nature": false,
+    "perception": false,
+    "performance": false,
+    "persuasion": false,
+    "religion": false,
+    "sleightOfHand": false,
+    "stealth": false,
+    "survival": true
+  },
+  "attacks": [
+    {
+      "attacks_id": 1,
+      "name": "Sword",
+      "atkBonus": 3,
+      "damage": "2d6 splash"
+    },
+    {
+      "attacks_id": 53,
+      "name": "Long Sword",
+      "atkBonus": 3,
+      "damage": "2d6 splash"
+    },
+    {
+      "attacks_id": 54,
+      "name": "Short Katana",
+      "atkBonus": 6,
+      "damage": "1d8 fire"
+    }
+  ],
+  "spells": [
+    {
+      "spellId": 1,
+      "cantrip": false,
+      "spellName": "Eldritch blast",
+      "spellLevel": 1
+    },
+    {
+      "spellId": 2,
+      "cantrip": false,
+      "spellName": "Ice shard",
+      "spellLevel": 1
+    },
+    {
+      "spellId": 3,
+      "cantrip": true,
+      "spellName": "Fireball",
+      "spellLevel": 0
+    },
+    {
+      "spellId": 61,
+      "cantrip": false,
+      "spellName": "Eldritch blast with fire",
+      "spellLevel": 1
+    },
+    {
+      "spellId": 62,
+      "cantrip": false,
+      "spellName": "Ice shard with eldritch",
+      "spellLevel": 1
+    },
+    {
+      "spellId": 63,
+      "cantrip": true,
+      "spellName": "Fireball with ice",
+      "spellLevel": 0
+    }
+  ]
+}
