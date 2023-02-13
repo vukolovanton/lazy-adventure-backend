@@ -20,24 +20,20 @@ async function handleCreateCharacter(req, res) {
 }
 
 async function getCharacterByName(req, res) {
-	if (!req.params.characterName) {
-		return res.status(500).json({ message: 'Request body is missing' });
-	}
 	const characterName = trimCharacterName(req.params.characterName);
 	const path = __basedir + directoryPath + characterName + '.json';
 
 	fs.readFile(path, "utf8", (error, jsonString) => {
-    if (error) {
-        res.status(500).json({ message: 'Error reading the JSON file: ', error });
-    }
-    try {
-        const character = JSON.parse(jsonString);
-        res.status(200).json(character);
-    } catch (err) {
-        console.log("Error parsing JSON string:", err);
-        res.status(500).json({ message: 'Error reading the JSON file: ', err });
-    }
-});
+		try {
+			if (error) {
+				throw new Error("rror reading the JSON file")
+			}
+			const character = JSON.parse(jsonString);
+			res.status(200).json(character);
+		} catch (err) {
+			res.status(500).json({ message: 'Error reading the JSON file: ', err });
+		}
+	});
 }
 
 module.exports = {
